@@ -37,6 +37,16 @@ public class ConsoleUtil {
         return scanner.nextLine().trim();
     }
 
+    public static String readName(String prompt){
+        System.out.print(prompt);
+        return scanner.nextLine().trim();
+    }
+
+    public static String readPhone(String prompt){
+        System.out.print(prompt);
+        return scanner.nextLine().trim();
+    }
+
     public static boolean confirm(String prompt){
         System.out.print(prompt+"{y/n):");
         String input=scanner.nextLine().trim().toLowerCase();

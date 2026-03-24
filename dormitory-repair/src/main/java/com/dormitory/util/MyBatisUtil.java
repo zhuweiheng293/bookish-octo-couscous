@@ -23,24 +23,24 @@ public class MyBatisUtil {
         }
 
         try {
-            System.out.println("========== MyBatis 初始化开始 ==========");
+            //System.out.println("========== MyBatis 初始化开始 ==========");
 
             Properties props = new Properties();
             InputStream propsStream = Resources.getResourceAsStream("mybatis.properties");
             props.load(propsStream);
 
-            System.out.println("数据库URL: " + props.getProperty("jdbc.url"));
-            System.out.println("用户名: " + props.getProperty("jdbc.username"));
+            //System.out.println("数据库URL: " + props.getProperty("jdbc.url"));
+            //System.out.println("用户名: " + props.getProperty("jdbc.username"));
 
             InputStream inputStream = Resources.getResourceAsStream("mybatis-config.xml");
             sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream, props);
 
             try (SqlSession session = sqlSessionFactory.openSession()) {
-                System.out.println("数据库连接测试成功！");
+                //System.out.println("数据库连接测试成功！");
             }
 
             initialized = true;
-            System.out.println("========== MyBatis 初始化成功 ==========");
+            //System.out.println("========== MyBatis 初始化成功 ==========");
         } catch (Exception e) {
             System.out.println("========== MyBatis 初始化失败 ==========");
             e.printStackTrace();

@@ -5,48 +5,52 @@ import com.dormitory.mapper.UserMapper;
 import com.dormitory.util.MyBatisUtil;
 
 public class UserService {
-    public boolean register(String userNo, String password, String confirmPwd, int role) {
+    public boolean register(String userNo,String name,String phone, String password, String confirmPwd, int role) {
         System.out.println("========== 开始注册 ==========");
         System.out.println("账号: " + userNo);
 
-        // 1. 检查两次密码是否一致
-        if (!password.equals(confirmPwd)) {
+        boolean passwordCompare=password.equals(confirmPwd);
+        if(!passwordCompare){
             System.out.println("两次输入的密码不一致！");
             return false;
         }
 
-        // 2. 根据角色检查账号格式
-        if (role == 1) {
-            if (!userNo.startsWith("3125") && !userNo.startsWith("3225")) {
+        boolean isStudentUser=(role==1);
+        boolean isAdminUser=(role==2);
+
+        if(isStudentUser){
+            boolean startsWith3125=userNo.startsWith("3125");
+            boolean startsWith3225=userNo.startsWith("3225");
+
+            if(!(startsWith3125||startsWith3225)){
                 System.out.println("学号格式不正确！必须以3125或3225开头");
                 return false;
             }
-        } else if (role == 2) {
-            if (!userNo.startsWith("0025")) {
+        } else if (isAdminUser) {
+            boolean startsWith0025=userNo.startsWith("0025");
+            if(!startsWith0025){
                 System.out.println("工号格式不正确！必须以0025开头");
                 return false;
             }
         }
 
-        // ========== 临时注释掉检查账号存在的代码 ==========
-        // 3. 检查账号是否已存在
-        // UserMapper mapper = MyBatisUtil.getMapper(UserMapper.class);
-        // User existUser = mapper.findByUserNo(userNo);
-        // System.out.println("查询结果: " + (existUser == null ? "null (不存在)" : "存在! ID=" + existUser.getId()));
-        // if (existUser != null) {
-        //     System.out.println("账号已存在！");
-        //     return false;
-        // }
+        UserMapper mapper=MyBatisUtil.getMapper(UserMapper.class);
+        User userIsExist= mapper.findByUserNo(userNo);
+        boolean existUser=(userIsExist!=null);
 
-        // 4. 创建新用户
+        if(existUser){
+            System.out.println("账号已存在！");
+            return  false;
+        }
+
         User user = new User();
         user.setUserNo(userNo);
         user.setPassword(password);
         user.setRole(role);
-        user.setName("新用户");
+        user.setName(name);
+        user.setPhone(phone);
 
-        // 5. 插入数据库
-        UserMapper mapper = MyBatisUtil.getMapper(UserMapper.class);
+
         int result = mapper.insert(user);
         System.out.println("插入结果: " + result);
         System.out.println("========== 注册结束 ==========");
@@ -67,7 +71,7 @@ public class UserService {
         return user;
     }
 
-    public boolean changePassword(Long userId,String oldPwd,String newPwd,String confirmPwd){
+    public boolean changePassword(Long userId, String oldPwd, String newPwd, String confirmPwd) {
 
         UserMapper mapper=MyBatisUtil.getMapper(UserMapper.class);
 
@@ -98,11 +102,30 @@ public class UserService {
         User user= mapper.findById(userId);
 
         System.out.println("\n======== 个人信息 ========");
-        System.out.println("账号"+user.getUserNo());
-        System.out.println("姓名"+(user.getName()!=null?user.getName():"未设置"));
-        System.out.println("手机号"+(user.getPhone()!=null?user.getPhone():"未设置"));
-        System.out.println("角色"+(user.isStudent()?"学生":"管理员"));
+        System.out.println("账号："+user.getUserNo());
+        System.out.println("昵称："+(user.getName()!=null?user.getName():"未设置"));
+        System.out.println("手机号："+(user.getPhone()!=null?user.getPhone():"未设置"));
+        System.out.println("角色："+(user.isStudent()?"学生":"管理员"));
         System.out.println("==========================\n");
     }
 
+    public boolean updateName(Long userId,String newName){
+        if(newName==null||newName.trim().isEmpty()){
+            System.out.println("昵称不能为空！");
+            return false;
+        }
+        UserMapper mapper=MyBatisUtil.getMapper(UserMapper.class);
+        int result= mapper.updateName(userId,newName);
+        return result>0;
+    }
+
+    public boolean updatePhone(Long userId,String newPhone){
+        if(newPhone==null||newPhone.trim().isEmpty()){
+            System.out.println("手机号不能为空！");
+            return false;
+        }
+        UserMapper mapper=MyBatisUtil.getMapper(UserMapper.class);
+        int result= mapper.updatePhone(userId,newPhone);
+        return result>0;
+    }
 }

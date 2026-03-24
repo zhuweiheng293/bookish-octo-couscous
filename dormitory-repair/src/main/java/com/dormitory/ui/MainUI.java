@@ -61,10 +61,13 @@ public class MainUI {
             int role=ConsoleUtil.readInt("请选择角色（1-学生，2-维修人员）：");
 
             String userNo=ConsoleUtil.readString("请输入学号/工号：");
+            String name=ConsoleUtil.readName("请输入昵称：");
+            String phone=ConsoleUtil.readPhone("请输入手机号：");
             String password = ConsoleUtil.readPassword("请输入密码：");
             String confirmPwd = ConsoleUtil.readPassword("请确认密码：");
 
-            boolean success= userService.register(userNo,password,confirmPwd,role);
+
+            boolean success= userService.register(userNo,name,phone,password,confirmPwd,role);
 
             if(success){
                 System.out.println("注册成功！请返回主界面登录!");

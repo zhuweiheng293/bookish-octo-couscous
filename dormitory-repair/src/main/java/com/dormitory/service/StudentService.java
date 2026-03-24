@@ -56,21 +56,30 @@ public class StudentService {
         RepairOrderMapper mapper=MyBatisUtil.getMapper(RepairOrderMapper.class);
 
         RepairOrder order= mapper.findById(orderId);
+        boolean orderIsExist=(order!=null);
 
-        if(order==null){
+        if(!orderIsExist){
             System.out.println("报修单不存在！");
+            return  false;
+        }
+
+        Long orderStudentId= order.getStudentId();
+        boolean isOwnOrder=orderStudentId.equals(studentId);
+
+        if (!isOwnOrder) {
+            System.out.println("无权操作他人的报修单！");
             return false;
         }
 
-        if(!order.getStudentId().equals(studentId)){
-            System.out.println("无权修改他人的报修单！");
+        int nowStatus= order.getStatus();
+        boolean Processing=(nowStatus==0);
+
+        if(!Processing){
+            System.out.println("只能取消待处理的报修单");
             return false;
         }
 
-        if(order.getStatus()!=0){
-            System.out.println("只能取消待处理的报修单！");
-            return false;
-        }
+
         return mapper.updateStatus(orderId,3)>0;
     }
 }

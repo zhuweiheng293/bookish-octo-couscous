@@ -52,6 +52,11 @@ public class AdminUI {
                     break;
                 case 6:
                     userService.view(nowUser.getId());
+
+                    boolean wantToUpdate = ConsoleUtil.confirm("是否更改个人信息？");
+                    if (wantToUpdate) {
+                        updateInfo();
+                    }
                     break;
                 case 7:
                     System.out.println("正在退出...");
@@ -139,6 +144,39 @@ public class AdminUI {
             nowUser = null;
         } else {
             System.out.println("密码修改失败！");
+        }
+    }
+
+    private void updateInfo() {
+        while (true) {
+            System.out.println("\n====修改个人数据====");
+            System.out.println("1.修改昵称");
+            System.out.println("2.修改手机号");
+            System.out.println("3.返回");
+
+            int choice = ConsoleUtil.readInt("请选择操作（输入1-3）");
+
+            if (choice == 1) {
+                String newName = ConsoleUtil.readString("请输入新昵称：");
+                boolean success = userService.updateName(nowUser.getId(), newName);
+                if (success) {
+                    System.out.println("昵称修改成功！");
+                } else {
+                    System.out.println("修改失败！");
+                }
+            } else if(choice==2){
+                String newPhone=ConsoleUtil.readString("请输入新的手机号：");
+                boolean success=userService.updatePhone(nowUser.getId(),newPhone);
+                if(success){
+                    System.out.println("手机号修改成功！");
+                }else {
+                    System.out.println("修改失败！");
+                }
+            } else if (choice==3) {
+                break;
+            }else {
+                System.out.println("无效输入！");
+            }
         }
     }
 }

@@ -57,10 +57,15 @@ public class StudentUI {
                     break;
                 case 6:
                     userService.view(nowUser.getId());
+
+                    boolean wantToUpdate = ConsoleUtil.confirm("是否更改个人信息？");
+                    if (wantToUpdate) {
+                        updateInfo();
+                    }
                     break;
                 case 7:
                     System.out.println("正在退出...");
-                    return;  // 返回主菜单
+                    return;
                 default:
                     System.out.println("无效选择！");
             }
@@ -118,7 +123,9 @@ public class StudentUI {
     private void viewMyOrders() {
         List<RepairOrder> orders = studentService.getMyRepairOrder(nowUser.getId());
 
-        if (orders.isEmpty()) {
+        boolean hasOrders = !orders.isEmpty();
+
+        if (!hasOrders) {
             System.out.println("暂无报修记录！");
             return;
         }
@@ -135,7 +142,7 @@ public class StudentUI {
                     order.getOrderNo(),
                     order.getDeviceType(),
                     order.getStatusText(),
-                    order.getCreateTime().toString().substring(0, 19));  // 只显示日期时间
+                    order.getCreateTime().toString().substring(0, 19));
         }
 
         int choice = ConsoleUtil.readInt("\n输入序号查看详情，输入0返回：");
@@ -163,7 +170,7 @@ public class StudentUI {
         System.out.println("\n======== 可取消的报修单 ========");
         int index = 1;
         for (RepairOrder order : orders) {
-            if (order.getStatus() == 0) {  // 0 = 待处理
+            if (order.getStatus() == 0) {
                 System.out.printf("%d. %s - %s%n", index++, order.getOrderNo(), order.getDeviceType());
             }
         }
@@ -199,6 +206,39 @@ public class StudentUI {
             nowUser = null;
         } else {
             System.out.println("密码修改失败！");
+        }
+    }
+
+    private void updateInfo() {
+        while (true) {
+            System.out.println("\n====修改个人数据====");
+            System.out.println("1.修改昵称");
+            System.out.println("2.修改手机号");
+            System.out.println("3.返回");
+
+            int choice = ConsoleUtil.readInt("请选择操作（输入1-3）：");
+
+            if (choice == 1) {
+                String newName = ConsoleUtil.readString("请输入新昵称：");
+                boolean success = userService.updateName(nowUser.getId(), newName);
+                if (success) {
+                    System.out.println("昵称修改成功！");
+                } else {
+                    System.out.println("修改失败！");
+                }
+            } else if(choice==2){
+                String newPhone=ConsoleUtil.readString("请输入新的手机号：");
+                boolean success=userService.updatePhone(nowUser.getId(),newPhone);
+                if(success){
+                    System.out.println("手机号修改成功！");
+                }else {
+                    System.out.println("修改失败！");
+                }
+            } else if (choice==3) {
+                break;
+            }else {
+                System.out.println("无效输入！");
+            }
         }
     }
 }
