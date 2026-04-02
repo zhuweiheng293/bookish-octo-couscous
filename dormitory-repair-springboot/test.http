@@ -1,0 +1,33 @@
+### 1. 注册学生
+POST http://localhost:9191/api/user/register
+Content-Type: application/x-www-form-urlencoded
+
+userNo=3125008888&name=张三&phone=13800138000&password=123456&confirmPwd=123456&role=1
+
+### 2. 登录（获取Token）
+POST http://localhost:9191/api/user/login
+Content-Type: application/x-www-form-urlencoded
+
+userNo=3125008888&password=123456
+
+### 3. 绑定宿舍（把下面的token换成上面登录返回的）
+POST http://localhost:9191/api/student/bind
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGFpbXMiOnsicm9sZSI6MSwidXNlck5vIjoiMzEyNTAwODg4OCIsInVzZXJJZCI6OH0sImV4cCI6MTc3NDkxNDc0OH0.G1jTzBHWkq2WSagkibyniBnYbLcz6yvXFZLeVWlcOFo
+Content-Type: application/x-www-form-urlencoded
+
+userId=1&building=A栋&room=101
+
+### 4. 创建报修单
+POST http://localhost:9191/api/student/create
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGFpbXMiOnsicm9sZSI6MSwidXNlck5vIjoiMzEyNTAwODg4OCIsInVzZXJJZCI6OH0sImV4cCI6MTc3NDkxNDc0OH0.G1jTzBHWkq2WSagkibyniBnYbLcz6yvXFZLeVWlcOFo
+Content-Type: application/x-www-form-urlencoded
+
+studentId=1&deviceType=水龙头&description=漏水严重
+
+### 5. 查看报修记录
+GET http://localhost:9191/api/student/repair_history?studentId=1
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGFpbXMiOnsicm9sZSI6MSwidXNlck5vIjoiMzEyNTAwODg4OCIsInVzZXJJZCI6OH0sImV4cCI6MTc3NDkxNDc0OH0.G1jTzBHWkq2WSagkibyniBnYbLcz6yvXFZLeVWlcOFo
+
+### 6. 管理员查看报修单详情
+GET http://localhost:9191/api/admin/orderinformation?orderId=1
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGFpbXMiOnsicm9sZSI6MSwidXNlck5vIjoiMzEyNTAwODg4OCIsInVzZXJJZCI6OH0sImV4cCI6MTc3NDkxNDc0OH0.G1jTzBHWkq2WSagkibyniBnYbLcz6yvXFZLeVWlcOFo
